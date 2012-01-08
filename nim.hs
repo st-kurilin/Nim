@@ -67,8 +67,10 @@ putAllStr (x:xs) = do
 
 showboard :: Board -> IO()
 showboard b = do 
-	putAllStr (map (\ (i, n) ->  objectsAtHeap n)  (zip [1..] b))
-	where objectsAtHeap n =  concat(["*" | _ <- [1..n]])
+	putAllStr (map stringify (indexedHeaps b))  where
+		objectsAtHeap n =  concat(["*" | _ <- [1..n]])
+		heapIndex  i = "[" ++ show i ++ "]"
+		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
 
 --Game
 iteration :: Board -> IO(Board)
