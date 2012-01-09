@@ -68,7 +68,7 @@ putAllStr (x:xs) = do
 showboard :: Board -> IO()
 showboard b = do 
 	putAllStr (map stringify (indexedHeaps b))  where
-		objectsAtHeap n =  concat(["*" | _ <- [1..n]])
+		objectsAtHeap n =  concat(replicate n "*"])
 		heapIndex  i = "[" ++ show i ++ "]"
 		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
 
