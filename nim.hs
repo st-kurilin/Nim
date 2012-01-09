@@ -3,26 +3,31 @@ import Char
 import List
 import Maybe
 
---domain
+--Domain
 type Board = [Int]	--number of objects in each heap
 type Heap = Int		--Heap id
 type Turn = (Int, Int)	--heap and number of objects to remove 
 
 applyTurn :: Turn -> Board -> Board
+--Build new board according to old one and turn.
 applyTurn t b = map 
 	(\ (i, v) -> if (i == fst t) then v - snd t else v)
 	(zip [1..] b)
 
 empty :: Board -> Bool
+--Check if board is empty. When it is, game is over.
 empty b = all (<=0) b
 
 indexedHeaps :: Board -> [(Heap, Int)]
+--Returns tupples of (heap index, number of object in the heap)
 indexedHeaps b = zip [1..] b
 
 availableHeaps :: Board -> [Heap]
+--Returns heaps that contains one or more objects.
 availableHeaps b = map fst (filter (\ (_, h) -> h > 0) (indexedHeaps b))
 
 availableObjectsByHeap :: Board -> Heap -> Int
+--Return number of objects in the heap.
 availableObjectsByHeap b h = snd (head (
 	filter (\ (i, _) -> i == h) (indexedHeaps b)))
 
