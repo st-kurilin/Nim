@@ -17,7 +17,7 @@ applyTurn t b = map
 
 empty :: Board -> Bool
 --Check if board is empty. When it is, game is over.
-empty b = all (<=0) b
+empty b = all (<= 0) b
 
 indexedHeaps :: Board -> [(Heap, Int)]
 --Returns tupples of (heap index, number of object in the heap)
@@ -78,7 +78,7 @@ readturn b = do
 showboard :: Board -> IO()
 --Displays board in user friendly interface.
 showboard b = do 
-	putAllStr (map stringify (indexedHeaps b))  where
+	putAllStr (map stringify (indexedHeaps b)) where
 		objectsAtHeap n =  concat(replicate n "*")
 		heapIndex  i = "[" ++ show i ++ "]"
 		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
