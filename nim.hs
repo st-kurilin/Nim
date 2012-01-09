@@ -4,6 +4,7 @@ import List
 import Maybe
 
 --Domain
+--
 type Board = [Int]	--number of objects in each heap
 type Heap = Int		--Heap id
 type Turn = (Int, Int)	--heap and number of objects to remove 
@@ -31,12 +32,10 @@ availableObjectsByHeap :: Board -> Heap -> Int
 availableObjectsByHeap b h = snd (head (
 	filter (\ (i, _) -> i == h) (indexedHeaps b)))
 
---IO stuff
-
-int2St :: Int -> String
-int2St x =  [chr(ord('0') + x)]
-
+--IO Utils
+--
 promtInt :: String -> (Int -> Bool) -> IO Int
+--Read Int from console. There could be validation using predicate.
 promtInt msg p = do 
 	putStr (msg ++ "> ")
 	c <- getChar
@@ -47,30 +46,37 @@ promtInt msg p = do
 		else promtInt msg p
 
 promtIntFromRange :: String -> (Int, Int) -> IO Int
+--Read Int from console. Int should be in range.
 promtIntFromRange msg (from, to) = promtInt newMsg p where 
 	newMsg = msg ++ "[" ++ show from ++ ";" ++ show to ++"]" 
 	p v = v >= from && v <= to
 
 promtIntFromSet :: String -> [Int] -> IO Int
+--Read Int from console. Int should be in set.
 promtIntFromSet msg s = promtInt newMsg p where 
 	newMsg = msg ++ show s
 	p v = isJust (find (== v) s)
 
-	
+putAllStr :: [String] -> IO()
+--Print each string from new line.
+putAllStr [x] = do putStrLn x
+putAllStr (x:xs) = do 
+	putAllStr [x]
+	putAllStr xs
+
+--Game specific IO
+--
 readturn :: Board -> IO(Turn)
+--Dialog for inputing turn data.
 readturn b = do 
 	heap <- promtIntFromSet "heap" (availableHeaps b)
 	objects <- promtIntFromRange "number" 
 		(1, (availableObjectsByHeap b heap))
 	return (heap, objects)
 
-putAllStr :: [String] -> IO()
-putAllStr [x] = do putStrLn x
-putAllStr (x:xs) = do 
-	putAllStr [x]
-	putAllStr xs
 
 showboard :: Board -> IO()
+--Displays board in user friendly interface.
 showboard b = do 
 	putAllStr (map stringify (indexedHeaps b))  where
 		objectsAtHeap n =  concat(replicate n "*"])
@@ -78,14 +84,15 @@ showboard b = do
 		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
 
 --Game
+--
 iteration :: Board -> IO(Board)
 iteration b = do 
 	showboard b
 	t <- readturn b
 	return (applyTurn t b)
 
-game :: IO(Board)-> IO(Board)
-game b = do 
+play :: IO(Board)-> IO(Board)
+play b = do 
 	board <- b
 	if (empty board)
 	then return [] 
@@ -93,7 +100,7 @@ game b = do
 
 nim :: IO() 
 nim = do 	
-	ignored <- game (return [1, 2, 3, 1])
+	ignored <- play (return [1, 2, 3, 1])
 	putStrLn "done"
 
 
