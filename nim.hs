@@ -79,26 +79,25 @@ showboard :: Board -> IO()
 --Displays board in user friendly interface.
 showboard b = do 
 	putAllStr (map stringify (indexedHeaps b))  where
-		objectsAtHeap n =  concat(replicate n "*"])
+		objectsAtHeap n =  concat(replicate n "*")
 		heapIndex  i = "[" ++ show i ++ "]"
 		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
 
 --Game
 --
-iteration :: Board -> IO(Board)
-iteration b = do 
-	showboard b
-	t <- readturn b
-	return (applyTurn t b)
-
 play :: IO(Board)-> IO(Board)
+--Actually game.
 play b = do 
 	board <- b
 	if (empty board)
 	then return [] 
-	else game (iteration board)
+	else do 
+		showboard board
+		t <- readturn board
+		play (return (applyTurn t board))
 
 nim :: IO() 
+--Runner function.
 nim = do 	
 	ignored <- play (return [1, 2, 3, 1])
 	putStrLn "done"
