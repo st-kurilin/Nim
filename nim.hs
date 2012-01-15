@@ -16,8 +16,9 @@ type Turn = (Integer, Integer)	--heap and number of objects to remove
 
 --Build new board according to old one and turn.
 applyTurn :: Turn -> Board -> Board
-applyTurn (heapId, removed) board = map decHeap	(zip [1..] board)
-	where decHeap (i, v) = if (i == heapId) then v - removed else v
+applyTurn (heapId, removed) board = zipWith decHeap [1..] board
+	where decHeap idx n	| idx == heapId	= n - removed 
+				| otherwise 	= n
 
 --Check if board is empty. When it is, game is over.
 empty :: Board -> Bool
