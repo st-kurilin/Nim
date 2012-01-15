@@ -10,9 +10,9 @@ import Data.Maybe
 --any number of objects provided they all come from the same heap.
 --Read more at http://en.wikipedia.org/wiki/Nim
 --
-type Board = [Int]	--number of objects in each heap
-type Heap = Int		--Heap id
-type Turn = (Int, Int)	--heap and number of objects to remove 
+type Board = [Integer]		--number of objects in each heap
+type Heap = Integer		--Heap id
+type Turn = (Integer, Integer)	--heap and number of objects to remove 
 
 --Build new board according to old one and turn.
 applyTurn :: Turn -> Board -> Board
