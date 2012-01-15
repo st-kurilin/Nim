@@ -1,7 +1,7 @@
 module Nim where 
-import Char 
-import List
-import Maybe
+import Data.Char 
+import Data.List
+import Data.Maybe
 
 --Domain 
 --Nim is a mathematical game of strategy 
