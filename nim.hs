@@ -34,8 +34,7 @@ availableHeaps b = map fst (filter (\ (_, h) -> h > 0) (indexedHeaps b))
 
 --Return number of objects in the heap.
 availableObjectsByHeap :: Board -> Heap -> Integer
-availableObjectsByHeap b h = snd (head (
-	filter (\ (i, _) -> i == h) (indexedHeaps b)))
+availableObjectsByHeap board heapId = board !! (fromInteger heapId - 1)
 
 --IO Utils
 --
