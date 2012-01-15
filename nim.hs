@@ -25,7 +25,7 @@ empty :: Board -> Bool
 empty b = all (<= 0) b
 
 --Returns tupples of (heap index, number of object in the heap).
-indexedHeaps :: Board -> [(Heap, Int)]
+indexedHeaps :: Board -> [(Heap, Integer)]
 indexedHeaps b = zip [1..] b
 
 --Returns heaps that contains one or more objects.
@@ -33,31 +33,31 @@ availableHeaps :: Board -> [Heap]
 availableHeaps b = map fst (filter (\ (_, h) -> h > 0) (indexedHeaps b))
 
 --Return number of objects in the heap.
-availableObjectsByHeap :: Board -> Heap -> Int
+availableObjectsByHeap :: Board -> Heap -> Integer
 availableObjectsByHeap b h = snd (head (
 	filter (\ (i, _) -> i == h) (indexedHeaps b)))
 
 --IO Utils
 --
 --Read Int from console. There could be validation using predicate.
-promtInt :: String -> (Int -> Bool) -> IO Int
+promtInt :: String -> (Integer -> Bool) -> IO Integer
 promtInt msg p = do 
 	putStr (msg ++ "> ")
 	c <- getChar
 	ignored <- getLine
-	let x = ((ord c) - ord('0'))
+	let x = toInteger((ord c) - ord('0'))
 	if(p x) 
 		then return x 
 		else promtInt msg p
 
 --Read Int from console. Int should be in range.
-promtIntFromRange :: String -> (Int, Int) -> IO Int
+promtIntFromRange :: String -> (Integer, Integer) -> IO Integer
 promtIntFromRange msg (from, to) = promtInt newMsg p where 
 	newMsg = msg ++ "[" ++ show from ++ ";" ++ show to ++"]" 
 	p v = v >= from && v <= to
 
 --Read Int from console. Int should be in set.
-promtIntFromSet :: String -> [Int] -> IO Int
+promtIntFromSet :: String -> [Integer] -> IO Integer
 promtIntFromSet msg s = promtInt newMsg p where 
 	newMsg = msg ++ show s
 	p v = isJust (find (== v) s)
@@ -82,8 +82,8 @@ readTurn b = do
 --Displays board in user friendly interface.
 showBoard :: Board -> IO()
 showBoard b = do 
-	putAllStr (map stringify (indexedHeaps b)) where
-		objectsAtHeap n =  concat(replicate n "*")
+	putAllStr (map stringify (indexedHeaps b)) 
+	where	objectsAtHeap n =  concat(replicate (fromIntegral n) "*")
 		heapIndex  i = "[" ++ show i ++ "]"
 		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
 
