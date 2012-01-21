@@ -39,9 +39,9 @@ availableObjectsByHeap board heapId = board !! (fromInteger heapId - 1)
 --String representation of board
 showHeaps :: Board -> [String]
 showHeaps board = map showIdxHeap (indexedHeaps board)
-	where	showIdxHeap (heapId, n) = heapIndex ++ objects
-		heapIndex = concat ["[", show heapId, "]"]
-		objects = genericReplicate n '*'
+	where	showIdxHeap (heapId, n) = heapIndex heapId++ objects n 
+		heapIndex heapId = concat ["[", show heapId, "]"]
+		objects n = genericReplicate n '*'
 
 --IO Utils
 --
