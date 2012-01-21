@@ -78,12 +78,17 @@ readTurn b = do
 	return (heap, objects)
 
 --Displays board in user friendly interface.
-showBoard :: Board -> IO()
-showBoard b = do 
-	putAllStr (map stringify (indexedHeaps b)) 
-	where	objectsAtHeap n =  concat(replicate (fromIntegral n) "*")
-		heapIndex  i = "[" ++ show i ++ "]"
-		stringify (i, n) =  heapIndex i ++ objectsAtHeap n
+showHeaps :: Board -> [String]
+showHeaps board = map showIdxHeap (indexedHeaps board)
+
+showIdxHeap :: (Heap, Integer) -> String
+showIdxHeap (heapId, n) = heapIndex ++ objects
+	where	heapIndex = concat ["[", show heapId, "]"]
+		objects = genericReplicate n '*'
+
+printBoard :: Board -> IO()
+printBoard board = putAllStr $ showHeaps board
+
 
 --Game
 --
@@ -94,7 +99,7 @@ play b = do
 	if (empty board)
 	then return [] 
 	else do 
-		showBoard board
+		printBoard board
 		t <- readTurn board
 		play (return (applyTurn t board))
 
