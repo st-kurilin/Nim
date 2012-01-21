@@ -61,16 +61,11 @@ promptIntFromRange msg (from, to) = promptInt newMsg inRange
 
 --Read Int from console. Int should be in set.
 promptIntFromSet :: String -> [Integer] -> IO Integer
-promptIntFromSet msg s = promptInt newMsg p where 
-	newMsg = msg ++ show s
-	p v = isJust (find (== v) s)
+promptIntFromSet msg s = promptInt (msg ++ show s) (`elem` s) 
 
 --Print each string from new line.
 putAllStr :: [String] -> IO()
-putAllStr [x] = do putStrLn x
-putAllStr (x:xs) = do 
-	putAllStr [x]
-	putAllStr xs
+putAllStr xs = mapM_ putStrLn xs
 
 --Game specific IO
 --
