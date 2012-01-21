@@ -38,26 +38,30 @@ availableObjectsByHeap board heapId = board !! (fromInteger heapId - 1)
 
 --IO Utils
 --
+maybeRead :: (Read a) => String -> Maybe a
+maybeRead str = listToMaybe [x | (x, "") <- reads str]
+
+maybeReadLn :: (Read a) => IO (Maybe a)
+maybeReadLn = fmap maybeRead readLn
+
 --Read Int from console. There could be validation using predicate.
-promtInt :: String -> (Integer -> Bool) -> IO Integer
-promtInt msg p = do 
+promptInt :: String -> (Integer -> Bool) -> IO Integer
+promptInt msg p = do 
 	putStr (msg ++ "> ")
-	c <- getChar
-	ignored <- getLine
-	let x = toInteger((ord c) - ord('0'))
-	if(p x) 
-		then return x 
-		else promtInt msg p
+	inp <- maybeReadLn
+	case inp of 
+		Just x | p x	-> return x
+		_		-> promptInt msg p
 
 --Read Int from console. Int should be in range.
-promtIntFromRange :: String -> (Integer, Integer) -> IO Integer
-promtIntFromRange msg (from, to) = promtInt newMsg p where 
-	newMsg = msg ++ "[" ++ show from ++ ";" ++ show to ++"]" 
-	p v = v >= from && v <= to
+promptIntFromRange :: String -> (Integer, Integer) -> IO Integer
+promptIntFromRange msg (from, to) = promptInt newMsg inRange
+	where	newMsg = concat [msg, "[", show from, ";", show to,"]"]
+		inRange v = v >= from && v <= to
 
 --Read Int from console. Int should be in set.
-promtIntFromSet :: String -> [Integer] -> IO Integer
-promtIntFromSet msg s = promtInt newMsg p where 
+promptIntFromSet :: String -> [Integer] -> IO Integer
+promptIntFromSet msg s = promptInt newMsg p where 
 	newMsg = msg ++ show s
 	p v = isJust (find (== v) s)
 
@@ -73,8 +77,8 @@ putAllStr (x:xs) = do
 --Dialog for inputing turn data.
 readTurn :: Board -> IO(Turn)
 readTurn b = do 
-	heap <- promtIntFromSet "heap" (availableHeaps b)
-	objects <- promtIntFromRange "number" 
+	heap <- promptIntFromSet "heap" (availableHeaps b)
+	objects <- promptIntFromRange "number" 
 		(1, (availableObjectsByHeap b heap))
 	return (heap, objects)
 
