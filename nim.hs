@@ -30,19 +30,29 @@ indexedHeaps b = zip [1..] b
 
 --Returns heaps that contains one or more objects.
 availableHeaps :: Board -> [Heap]
-availableHeaps b = map fst (filter (\ (_, h) -> h > 0) (indexedHeaps b))
+availableHeaps b = map fst . filter ((> 0) . snd) $ indexedHeaps b
 
 --Return number of objects in the heap.
 availableObjectsByHeap :: Board -> Heap -> Integer
 availableObjectsByHeap board heapId = board !! (fromInteger heapId - 1)
 
+--String representation of board
+showHeaps :: Board -> [String]
+showHeaps board = map showIdxHeap (indexedHeaps board)
+	where	showIdxHeap (heapId, n) = heapIndex ++ objects
+		heapIndex = concat ["[", show heapId, "]"]
+		objects = genericReplicate n '*'
+
 --IO Utils
 --
+--Try to read from string. 
+--On Succes return just some result. On failure - return nothing.
 maybeRead :: (Read a) => String -> Maybe a
 maybeRead str = listToMaybe [x | (x, "") <- reads str]
 
+--Try to read from input line.
 maybeReadLn :: (Read a) => IO (Maybe a)
-maybeReadLn = fmap maybeRead readLn
+maybeReadLn = fmap maybeRead getLine
 
 --Read Int from console. There could be validation using predicate.
 promptInt :: String -> (Integer -> Bool) -> IO Integer
@@ -78,14 +88,6 @@ readTurn b = do
 	return (heap, objects)
 
 --Displays board in user friendly interface.
-showHeaps :: Board -> [String]
-showHeaps board = map showIdxHeap (indexedHeaps board)
-
-showIdxHeap :: (Heap, Integer) -> String
-showIdxHeap (heapId, n) = heapIndex ++ objects
-	where	heapIndex = concat ["[", show heapId, "]"]
-		objects = genericReplicate n '*'
-
 printBoard :: Board -> IO()
 printBoard board = putAllStr $ showHeaps board
 
