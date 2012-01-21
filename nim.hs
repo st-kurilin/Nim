@@ -93,20 +93,16 @@ printBoard board = putAllStr $ showHeaps board
 --Game
 --
 --Actually game.
-play :: IO(Board)-> IO(Board)
-play b = do 
-	board <- b
-	if (empty board)
-	then return [] 
-	else do 
-		printBoard board
-		t <- readTurn board
-		play (return (applyTurn t board))
+play :: Board -> IO(Board)
+play board	| empty board	= return [] 
+		| otherwise	= do	printBoard board
+					t <- readTurn board
+					play $ applyTurn t board
 
 --Runner function.
 nim :: IO() 
-nim = do 	
-	ignored <- play (return [1, 2, 3, 1])
-	putStrLn "done"
+nim = do
+	play [1, 2, 3, 1]
+	return ()
 
 
