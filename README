@@ -5,3 +5,5 @@ It's a game, NOT a solver.
 I'm doing it as exercise on Programming in Haskell by Graham Hutton.
 
 Any comments are highly appreciated.
+
+Code review can be found on http://codereview.stackexchange.com/questions/7623/nim-game-in-haskell. 
